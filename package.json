@@ -1,0 +1,25 @@
+{
+  "name": "d3-basics",
+  "version": "1.0.0",
+  "description": "Basic data visualizations using D3.js v4",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamLubbers/D3-basics.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamLubbers/D3-basics/issues"
+  },
+  "homepage": "https://github.com/SamLubbers/D3-basics#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "node-sass-middleware": "^0.11.0",
+    "pug": "^2.0.0-rc.4"
+  }
+}

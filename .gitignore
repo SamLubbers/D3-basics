@@ -1,0 +1,6 @@
+# npm modules
+node_modules/
+
+# compiled css
+*.css
+*.css.map
