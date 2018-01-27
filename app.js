@@ -3,6 +3,7 @@ var path = require('path');
 var sassMiddleware = require('node-sass-middleware');
 
 var index = require('./routes/index');
+var shapes = require('./routes/shapes')
 
 var app = express();
 
@@ -19,6 +20,7 @@ app.use(sassMiddleware({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/shapes', shapes)
 
 app.listen('3000', ()=> console.log('Application listening on http://localhost:3000/'));
 
