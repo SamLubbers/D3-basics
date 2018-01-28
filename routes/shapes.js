@@ -8,5 +8,6 @@ router.get('/line', (req, res) => {res.render('shapes/line');});
 router.get('/polygon', (req, res) => {res.render('shapes/polygon');});
 router.get('/polyline', (req, res) => {res.render('shapes/polyline');});
 router.get('/path', (req, res) => {res.render('shapes/path');});
+router.get('/text', (req, res) => {res.render('shapes/text');});
 
 module.exports = router;
