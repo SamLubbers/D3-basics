@@ -1,0 +1,29 @@
+extends ../layout
+
+block content
+	svg.ctr
+		defs
+			path(id='diagonal',
+			d="M120,20 l100,100",
+			fill='none',
+			stroke='#444',
+			stroke-width='2')
+			
+			g(id='multiline')
+				use(xlink:href='#diagonal' y='0')
+				use(xlink:href='#diagonal' y='5')
+				use(xlink:href='#diagonal' y='10')
+				use(xlink:href='#diagonal' y='15')
+				use(xlink:href='#diagonal' y='20')
+				use(xlink:href='#diagonal' y='25')
+			g(id='multimultiline')
+				use(xlink:href='#multiline' y='0')
+				use(xlink:href='#multiline' y='30')
+				use(xlink:href='#multiline' y='60')
+				use(xlink:href='#multiline' y='90')
+				use(xlink:href='#multiline' y='120')
+				use(xlink:href='#multiline' y='150')
+			clipPath(id='circle_clip')
+				circle(r='50',cx='170',cy='150')
+		
+		use(xlink:href='#multimultiline', clip-path='url(#circle_clip)')

@@ -11,5 +11,6 @@ router.get('/path', (req, res) => {res.render('svg/path');});
 router.get('/text', (req, res) => {res.render('svg/text');});
 router.get('/definition', (req, res) => {res.render('svg/definition');});
 router.get('/group', (req, res) => {res.render('svg/group');});
+router.get('/clippaths', (req, res) => {res.render('svg/clippaths');});
 
 module.exports = router;
