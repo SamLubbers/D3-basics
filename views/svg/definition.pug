@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+	svg.ctr
+		defs
+			path(id='wave',
+			d="m2,50 q20,50 40,0 q20,-50 40,0",
+			fill='none',
+			stroke='#444',
+			stroke-width='4')
+		
+		use(xlink:href='#wave' x='0')
+		use(xlink:href='#wave' x='80')
+		use(xlink:href='#wave' x='160')
+		use(xlink:href='#wave' x='240')
+		use(xlink:href='#wave' x='320')
+		use(xlink:href='#wave' x='400')
