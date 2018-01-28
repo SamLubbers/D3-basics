@@ -1,5 +1,5 @@
 # D3-basics
-Basic data visualizations using D3.js that I have learned from the course
+Basic data visualizations using D3.js v4 that I have learned from the course [learn D3.js for data visualization](https://www.udemy.com/learn-d3js-for-data-visualization)
 
 ## prerequisites
 
@@ -25,5 +25,5 @@ npm install
 start server
 
 ```bash
-npm.start
+npm start
 ```
