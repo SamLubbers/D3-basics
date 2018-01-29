@@ -1,0 +1,17 @@
+[{
+  "location":"Oslo",
+  "temperature":10
+  },
+  {
+    "location":"London",
+    "temperature":18
+  },
+  {
+    "location":"Rome",
+    "temperature":23
+  },
+  {
+    "location":"Madrid",
+    "temperature":32
+  }
+]
