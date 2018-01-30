@@ -3,8 +3,9 @@ var path = require('path');
 var sassMiddleware = require('node-sass-middleware');
 
 var index = require('./routes/index');
-var svg = require('./routes/svg')
-var fundamentals = require('./routes/fundamentals')
+var svg = require('./routes/svg');
+var fundamentals = require('./routes/fundamentals');
+var charts = require('./routes/charts');
 
 var app = express();
 
@@ -23,6 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/svg', svg);
 app.use('/fundamentals', fundamentals);
+app.use('/charts', charts);
+
 
 app.listen('3000', ()=> console.log('Application listening on http://localhost:3000/'));
 
