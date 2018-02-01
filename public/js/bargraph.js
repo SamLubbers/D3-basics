@@ -1,41 +1,63 @@
-var dataset = [];
+var dataset = [
+    {"date":"01/01/18" ,"revenue":1000},
+    {"date":"01/02/18" ,"revenue":2000},
+    {"date":"01/03/18" ,"revenue":3000},
+    {"date":"01/04/18" ,"revenue":4000},
+    {"date":"01/05/18" ,"revenue":5000},
+    {"date":"01/06/18" ,"revenue":6000},
+    {"date":"01/07/18" ,"revenue":5000},
+    {"date":"01/08/18" ,"revenue":4000},
+    {"date":"01/09/18" ,"revenue":3000},
+    {"date":"01/10/18" ,"revenue":3000},
+    {"date":"01/11/18" ,"revenue":8000},
+    {"date":"01/12/18" ,"revenue":10000}
+]
 
-// random data generation
-for( var i = 0; i<25;i++){
-  dataset[i] = Math.round(Math.random() * 50)
-}
 
 // create svg container
 chart_height = 400
 chart_width = 800
-bar_padding = 1 // spacing between bars
+padding = chart_width / dataset.length;
+bar_padding = 20; // spacing between bars
 
 var svg = d3.select('#chart')
   .append('svg')
   .attr('height', chart_height)
   .attr('width', chart_width)
 
+// datetime formatting
+parseTime = d3.timeParse("%d/%m/%y");
+formatTime = d3.timeFormat("%e %b");
+
+dataset.forEach(function(e, i){
+  dataset[i].date = parseTime(e.date)
+});
+
+// scales
+time_scale = d3.scaleTime()
+    .domain([d3.min(dataset.map(x=>x.date)),d3.max(dataset.map(x=>x.date))])
+    .range([0, chart_width-padding]);
+
+revenue_scale = d3.scaleLinear()
+    .domain([0, d3.max(dataset.map(x=>x.revenue))])
+    .range([0, chart_height]);
 
 // bind data and create bars
 svg.selectAll('rect')
   .data(dataset)
   .enter()
   .append('rect')
-  .attr('x', function(d, i){
-    // set the spacing dynamically adjusted to the data
-    return i * (chart_width / dataset.length);
+  .attr('x', function(d){
+    return time_scale(d.date);
   })
   .attr('y', function(d){
-    // set height dynamically so that bars start at bottom of chart
-    return chart_height - (d * chart_height / Math.max(...dataset));
+    return chart_height - revenue_scale(d.revenue);
   })
-  .attr('width', function(d){
-    // set the bars width dynamically adjusted to the data
+  .attr('width', function(){
     return (chart_width / dataset.length) - bar_padding;
   })
   .attr('height', function(d){
-    // set the bars height dynamically adjusted to the data
-    return d * chart_height / Math.max(...dataset);
+    return revenue_scale(d.revenue)
   })
   .attr('fill', '#01FF70');
 
@@ -45,17 +67,17 @@ svg.selectAll('text')
   .enter()
   .append('text')
   .text(function(d){
-    return d
+    return formatTime(d.date);
   })
   .attr('x', function(d, i){
     // center text in the chart
-    bar_position = i * (chart_width / dataset.length);
+    bar_position = time_scale(d.date);
     bar_middle = ((chart_width/dataset.length) - bar_padding) / 2;
     return bar_position + bar_middle;
   })
   .attr('y', function(d){
     // set text inside charts
-    return chart_height - (d * chart_height / Math.max(...dataset)) + 18;
+    return chart_height - revenue_scale(d.revenue) + 18;
   })
   .attr('fill', '#777')
   .attr('text-anchor', 'middle');
