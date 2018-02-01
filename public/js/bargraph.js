@@ -18,7 +18,7 @@ var dataset = [
 chart_height = 400
 chart_width = 800
 padding = chart_width / dataset.length;
-bar_padding = 20; // spacing between bars
+bar_padding = 5; // spacing between bars
 
 var svg = d3.select('#chart')
   .append('svg')
@@ -53,8 +53,16 @@ svg.selectAll('rect')
   .attr('y', function(d){
     return chart_height - revenue_scale(d.revenue);
   })
-  .attr('width', function(){
-    return (chart_width / dataset.length) - bar_padding;
+  .attr('width', function(d, i){
+    if (i+1 != dataset.length){
+      // right limit is the initial position of the next bar
+      var right_limit = time_scale(dataset[i+1].date);
+    }else{
+      // if this is the last bar the limit will be the end of the chart
+      var right_limit = chart_width;
+    }
+    width = right_limit - time_scale(d.date) - bar_padding;
+    return width;
   })
   .attr('height', function(d){
     return revenue_scale(d.revenue)
@@ -70,9 +78,16 @@ svg.selectAll('text')
     return formatTime(d.date);
   })
   .attr('x', function(d, i){
+    bar_position = time_scale(d.date)
     // center text in the chart
-    bar_position = time_scale(d.date);
-    bar_middle = ((chart_width/dataset.length) - bar_padding) / 2;
+    if (i+1 != dataset.length){
+      // right limit is the initial position of the next bar
+      var right_limit = time_scale(dataset[i+1].date);
+    }else{
+      // if this is the last bar the limit will be the end of the chart
+      var right_limit = chart_width;
+    }
+    bar_middle = (right_limit - time_scale(d.date) - bar_padding) / 2;
     return bar_position + bar_middle;
   })
   .attr('y', function(d){
