@@ -34,6 +34,7 @@ y_scale = d3.scaleLinear()
 
 // create axis
 x_axis = d3.axisBottom( x_scale);
+y_axis = d3.axisLeft(y_scale);
 
 // add axis
 svg.append('g')
@@ -41,6 +42,10 @@ svg.append('g')
   .attr('class', 'axis')
   .attr('transform', 'translate(0,'+(chart_height-padding)+')')
 
+svg.append('g')
+  .call(y_axis)
+  .attr('class', 'axis')
+  .attr('transform', 'translate('+padding+',0)')
 // create circles
 svg.selectAll('circle')
   .data(dataset)
