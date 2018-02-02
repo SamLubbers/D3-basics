@@ -34,7 +34,8 @@ y_scale = d3.scaleLinear()
 
 // create axis
 x_axis = d3.axisBottom( x_scale);
-y_axis = d3.axisLeft(y_scale);
+y_axis = d3.axisLeft(y_scale)
+  .ticks('6');
 
 // add axis
 svg.append('g')
@@ -46,6 +47,7 @@ svg.append('g')
   .call(y_axis)
   .attr('class', 'axis')
   .attr('transform', 'translate('+padding+',0)')
+
 // create circles
 svg.selectAll('circle')
   .data(dataset)
@@ -58,4 +60,4 @@ svg.selectAll('circle')
     return y_scale(d[1]);
   })
   .attr('r', radius)
-  .attr('fill', '#444')
+  .attr('fill', '#666')
