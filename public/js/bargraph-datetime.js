@@ -36,7 +36,7 @@ dataset.forEach(function(e, i){
 // scales
 time_scale = d3.scaleTime()
     .domain([d3.min(dataset.map(x=>x.date)),d3.max(dataset.map(x=>x.date))])
-    .range([0, chart_width-padding]);
+    .range([padding, chart_width-padding]);
 
 revenue_scale = d3.scaleLinear()
     .domain([0, d3.max(dataset.map(x=>x.revenue))])
