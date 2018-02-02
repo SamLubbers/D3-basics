@@ -22,6 +22,7 @@ var svg = d3.select('#chart')
 x_values = dataset.map(x => x[0]);
 y_values = dataset.map(x => x[1]);
 
+
 // create scales
 x_scale = d3.scaleLinear()
     .domain([0,d3.max(x_values)])
@@ -30,6 +31,15 @@ x_scale = d3.scaleLinear()
 y_scale = d3.scaleLinear()
     .domain([0,d3.max(y_values)])
     .range([chart_height - padding, padding]);
+
+// create axis
+x_axis = d3.axisBottom( x_scale);
+
+// add axis
+svg.append('g')
+  .call(x_axis)
+  .attr('class', 'axis')
+  .attr('transform', 'translate(0,'+(chart_height-padding)+')')
 
 // create circles
 svg.selectAll('circle')
