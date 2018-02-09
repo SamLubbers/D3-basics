@@ -36,7 +36,7 @@ dataset.forEach(function(e, i){
 // scales
 time_scale = d3.scaleTime()
     .domain([d3.min(dataset.map(x=>x.date)),d3.max(dataset.map(x=>x.date))])
-    .range([padding, chart_width-padding]);
+    .range([0, chart_width-padding]);
 
 revenue_scale = d3.scaleLinear()
     .domain([0, d3.max(dataset.map(x=>x.revenue))])
@@ -67,7 +67,7 @@ svg.selectAll('rect')
   .attr('height', function(d){
     return revenue_scale(d.revenue)
   })
-  .attr('fill', '#01FF70');
+  .attr('fill', '#4285F4');
 
 // create labels
 svg.selectAll('text')
@@ -94,5 +94,5 @@ svg.selectAll('text')
     // set text inside charts
     return chart_height - revenue_scale(d.revenue) + 18;
   })
-  .attr('fill', '#777')
+  .attr('fill', 'white')
   .attr('text-anchor', 'middle');
