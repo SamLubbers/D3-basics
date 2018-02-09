@@ -96,3 +96,28 @@ svg.selectAll('text')
   })
   .attr('fill', 'white')
   .attr('text-anchor', 'middle');
+
+// event handler
+d3.select('#graph-update-button').on('click', function(){
+	dataset.reverse();
+
+	svg.selectAll('rect')
+		.data(dataset)
+		.attr('y', function(d){
+			return chart_height - revenue_scale(d.revenue);
+		})
+		.attr('height', function(d){
+			return revenue_scale(d.revenue);
+		});
+
+	svg.selectAll('text')
+		.data(dataset)
+		.text(function(d){
+			console.log(dataset)
+	    return formatTime(d.date);
+	  })
+	  .attr('y', function(d){
+	    // set text inside charts
+	    return chart_height - revenue_scale(d.revenue) + 18;
+	  })
+});
