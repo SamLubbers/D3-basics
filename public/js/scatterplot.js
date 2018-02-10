@@ -1,15 +1,15 @@
-var dataset            =   [
-    [ 400, 200 ],
-    [ 210,140 ],
-    [ 722,300 ],
-    [ 70,160 ],
-    [ 250,50 ],
-    [ 110,280 ],
-    [ 699,225 ],
-    [ 90, 220 ]
+var dataset = [
+  [400, 200],
+  [210, 140],
+  [722, 300],
+  [70, 160],
+  [250, 50],
+  [110, 280],
+  [699, 225],
+  [90, 220]
 ];
-var chart_width     =   800;
-var chart_height    =   400;
+var chart_width = 800;
+var chart_height = 400;
 var radius = 5;
 var padding = 50;
 
@@ -19,21 +19,17 @@ var svg = d3.select('#chart')
   .attr('width', chart_width)
   .attr('height', chart_height);
 
-x_values = dataset.map(x => x[0]);
-y_values = dataset.map(x => x[1]);
-
-
 // create scales
 x_scale = d3.scaleLinear()
-    .domain([0,d3.max(x_values)])
-    .range([padding, chart_width - padding]);
+  .domain([0, d3.max(dataset, (d) => d[0])])
+  .range([padding, chart_width - padding]);
 
 y_scale = d3.scaleLinear()
-    .domain([0,d3.max(y_values)])
-    .range([chart_height - padding, padding]);
+  .domain([0, d3.max(dataset, (d) => d[1])])
+  .range([chart_height - padding, padding]);
 
 // create axis
-x_axis = d3.axisBottom( x_scale);
+x_axis = d3.axisBottom(x_scale);
 y_axis = d3.axisLeft(y_scale)
   .ticks('6');
 
@@ -41,23 +37,51 @@ y_axis = d3.axisLeft(y_scale)
 svg.append('g')
   .call(x_axis)
   .attr('class', 'axis')
-  .attr('transform', 'translate(0,'+(chart_height-padding)+')')
+	.attr('id', 'x_axis')
+  .attr('transform', 'translate(0,' + (chart_height - padding) + ')')
 
 svg.append('g')
   .call(y_axis)
   .attr('class', 'axis')
-  .attr('transform', 'translate('+padding+',0)')
+	.attr('id', 'y_axis')
+  .attr('transform', 'translate(' + padding + ',0)')
 
 // create circles
 svg.selectAll('circle')
   .data(dataset)
   .enter()
   .append('circle')
-  .attr('cx', function(d){
+  .attr('cx', function(d) {
     return x_scale(d[0]);
   })
-  .attr('cy', function(d){
+  .attr('cy', function(d) {
     return y_scale(d[1]);
   })
   .attr('r', radius)
-  .attr('fill', '#666')
+  .attr('fill', '#4285F4')
+
+// update chart
+d3.select('#graph-update-button').on('click', function(){
+	dataset = dataset.map(x => [Math.random() * 700, Math.random() * 300])
+
+	x_scale.domain([0, d3.max(dataset, (d) => d[0])]);
+	y_scale.domain([0, d3.max(dataset, (d) => d[1])]);
+
+	svg.selectAll('circle')
+		.data(dataset)
+		.transition()
+		.duration(1000)
+		.ease(d3.easeCubicInOut)
+		.attr('cx', (d) => x_scale(d[0]))
+		.attr('cy', (d) => y_scale(d[1]));
+
+	svg.select('#x_axis')
+		.transition()
+		.duration(1000)
+		.call(x_axis);
+
+	svg.select('#y_axis')
+		.transition()
+		.duration(1000)
+		.call(y_axis)
+});

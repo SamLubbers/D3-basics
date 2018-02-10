@@ -126,7 +126,6 @@ svg.selectAll('text')
     return bar_position + bar_middle;
   })
   .attr('y', function(d) {
-    // set text inside charts
     return chart_height - revenue_scale(d.revenue) + 18;
   })
   .attr('fill', 'white')
@@ -134,7 +133,9 @@ svg.selectAll('text')
 
 // event handler
 d3.select('#graph-update-button').on('click', function() {
-  dataset.reverse();
+
+	dataset.forEach((o) => o.revenue = Math.random() * 9000 + 1000);
+
   svg.selectAll('rect')
     .data(dataset)
     .transition()
@@ -146,7 +147,8 @@ d3.select('#graph-update-button').on('click', function() {
     .attr('height', function(d) {
       return revenue_scale(d.revenue);
     });
-	
+
+
   svg.selectAll('text')
     .data(dataset)
     .transition()
@@ -156,7 +158,6 @@ d3.select('#graph-update-button').on('click', function() {
       return formatTime(d.date);
     })
     .attr('y', function(d) {
-      // set text inside charts
       return chart_height - revenue_scale(d.revenue) + 18;
     })
 });
