@@ -1,7 +1,7 @@
 // create random categorical data
 var dataset = [];
 
-categories = ['yes', 'no', 'unsure'];
+categories = ['Spain', 'UK', 'France', 'Italy', 'Germany', 'Canada', 'US', 'Mexico'];
 
 for (var i = 0; i < 50; i++) {
   dataset.push(categories[Math.floor(Math.random() * categories.length)])
@@ -18,18 +18,18 @@ var svg = d3.select('#chart')
   .attr('width', chart_width);
 
 // count number of elements in each array
-function number_of_items(dataset, item){
+function number_of_items(dataset, item) {
   return dataset.filter(x => x == item).length;
 };
 
 // find the most frequent item in a categorical dataset
-function most_frequent_item(dataset){
+function most_frequent_item(dataset) {
   unique_values = [...new Set(dataset)];
   most_frequent = '';
   max_count = 0;
-  for(value of unique_values){
+  for (value of unique_values) {
     value_count = number_of_items(dataset, value);
-    if(value_count > max_count){
+    if (value_count > max_count) {
       max_count = value_count;
       most_frequent = value
     };
@@ -39,45 +39,85 @@ function most_frequent_item(dataset){
 
 // scales
 x_scale = d3.scaleBand()
-    .domain(dataset)
-    .rangeRound([0, chart_width])
-    .paddingInner(0.05);
+  .domain(dataset)
+  .rangeRound([0, chart_width])
+  .paddingInner(0.05);
 
 y_scale = d3.scaleLinear()
-    .domain([0, number_of_items(dataset, most_frequent_item(dataset))])
-    .rangeRound([0, chart_height]);
+  .domain([0, number_of_items(dataset, most_frequent_item(dataset))])
+  .rangeRound([0, chart_height]);
 
 // bind data and create bars
 svg.selectAll('rect')
-  .data(dataset)
+  .data([...new Set(dataset)])
   .enter()
   .append('rect')
-  .attr('x', function(d){
+  .attr('x', function(d) {
     return x_scale(d);
   })
-  .attr('y', function(d){
+  .attr('y', function(d) {
     return chart_height - y_scale(number_of_items(dataset, d));
   })
   .attr('width', x_scale.bandwidth())
-  .attr('height', function(d){
-    return y_scale(number_of_items(dataset,d));
+  .attr('height', function(d) {
+    return y_scale(number_of_items(dataset, d));
   })
-  .attr('fill', '#01FF70');
+  .attr('fill', '#4285F4');
 
 // create labels
 svg.selectAll('text')
-  .data(dataset)
+  .data([...new Set(dataset)])
   .enter()
   .append('text')
-  .text(function(d){
+  .text(function(d) {
     return d;
   })
-  .attr('x', function(d, i){
-    return x_scale(d) + x_scale.bandwidth()/2;
+  .attr('x', function(d, i) {
+    return x_scale(d) + x_scale.bandwidth() / 2;
   })
-  .attr('y', function(d){
+  .attr('y', function(d) {
     // set text inside charts
-    return Math.round(chart_height - y_scale(number_of_items(dataset, d)) + 20);
+    return chart_height - y_scale(number_of_items(dataset, d)) + 20;
   })
-  .attr('fill', '#777')
+  .attr('fill', 'white')
   .attr('text-anchor', 'middle');
+
+d3.select('#graph-update-button').on('click', function() {
+  new_category = d3.select('#new-category').property('value');
+  dataset.push(new_category);
+
+  x_scale.domain(dataset);
+  y_scale.domain([0, number_of_items(dataset, most_frequent_item(dataset))]);
+
+  var bars = svg.selectAll('rect').data([...new Set(dataset)]);
+
+  bars.enter()
+    .append('rect')
+    .attr('x', (d) => x_scale(d))
+    .attr('y', chart_height)
+    .attr('height', 0)
+    .attr('width', x_scale.bandwidth())
+    .attr('fill', '#4285F4')
+    .merge(bars)
+    .transition()
+    .duration(1000)
+    .attr('x', (d) => x_scale(d))
+    .attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d)))
+    .attr('width', x_scale.bandwidth())
+    .attr('height', (d) => y_scale(number_of_items(dataset, d)));
+
+  var labels = svg.selectAll('text').data([...new Set(dataset)])
+
+  labels.enter()
+		.append('text')
+    .text((d) => d)
+    .attr('x', (d) => x_scale(d) + x_scale.bandwidth() / 2)
+    .attr('y', chart_height)
+    .attr('fill', 'white')
+    .attr('text-anchor', 'middle')
+    .merge(labels)
+    .transition()
+    .duration(1000)
+    .attr('x', (d) => x_scale(d) + x_scale.bandwidth() / 2)
+		.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d)) + 20);
+});

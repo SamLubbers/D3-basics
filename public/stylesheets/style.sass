@@ -1,3 +1,5 @@
+$cool-blue: #4285F4
+
 body
   padding: 50px
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
@@ -16,14 +18,14 @@ body
   display: inline-block
   width: 30px
   height: 300px
-  background-color: #4285F4
+  background-color: $cool-blue
   margin-right: 2px
 
 .axis
   path, line
     shape-rendering: crispEdges
     // line color
-    stroke: #4285F4
+    stroke: $cool-blue
   text
     font-size: 14px
     font-family: Helvetica
@@ -40,8 +42,8 @@ body
   padding: 10px 30px
   background-color: white
   font-weight: bold
-  background-color: #4285F4
-  border: 1px solid #4285F4
+  background-color: $cool-blue
+  border: 1px solid $cool-blue
   color: white
   +box-shadow(3px)
 
@@ -51,3 +53,20 @@ body
 
   &:active
     opacity: 0.5
+
+#new-category
+	display: block
+	margin: 1rem auto
+
+	padding: 5px 10px
+	font-size: 1rem
+
+	border-width: 0px 0px 1px 0px
+	border-color: $cool-blue
+	border-style: solid
+
+	&:focus
+		outline: none
+
+	&:invalid
+		+box-shadow(0px)

@@ -2,6 +2,9 @@ extends ../layout
 
 block content
 	div#chart
+	form
+		input#new-category(type='text' required)
+	button#graph-update-button Add
 
 block js
 	script(src='../js/bargraph-categorical.js')
