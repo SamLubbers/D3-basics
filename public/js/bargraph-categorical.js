@@ -7,6 +7,18 @@ for (var i = 0; i < 50; i++) {
   dataset.push(categories[Math.floor(Math.random() * categories.length)])
 }
 
+/*
+obtain unique values of an array with keys associated to each item
+*/
+function unique_with_keys(array){
+	unique_keyed_dataset = [];
+	array = [...new Set(array)];
+	for (var i = 0; i < array.length; i++) {
+		unique_keyed_dataset.push({'key':i,'value':array[i]});
+	}
+	return unique_keyed_dataset;
+}
+
 // create svg container
 chart_height = 400;
 chart_width = 800;
@@ -49,35 +61,31 @@ y_scale = d3.scaleLinear()
 
 // bind data and create bars
 svg.selectAll('rect')
-  .data([...new Set(dataset)])
+  .data(unique_with_keys(dataset), (d) => d.key)
   .enter()
   .append('rect')
-  .attr('x', function(d) {
-    return x_scale(d);
-  })
+  .attr('x', (d) => x_scale(d.value))
   .attr('y', function(d) {
-    return chart_height - y_scale(number_of_items(dataset, d));
+    return chart_height - y_scale(number_of_items(dataset, d.value));
   })
   .attr('width', x_scale.bandwidth())
   .attr('height', function(d) {
-    return y_scale(number_of_items(dataset, d));
+    return y_scale(number_of_items(dataset, d.value));
   })
   .attr('fill', '#4285F4');
 
 // create labels
 svg.selectAll('text')
-  .data([...new Set(dataset)])
+  .data(unique_with_keys(dataset), (d) => d.key)
   .enter()
   .append('text')
-  .text(function(d) {
-    return d;
-  })
+  .text((d) => d.value)
   .attr('x', function(d, i) {
-    return x_scale(d) + x_scale.bandwidth() / 2;
+    return x_scale(d.value) + x_scale.bandwidth() / 2;
   })
   .attr('y', function(d) {
     // set text inside charts
-    return chart_height - y_scale(number_of_items(dataset, d)) + 20;
+    return chart_height - y_scale(number_of_items(dataset, d.value)) + 20;
   })
   .attr('fill', 'white')
   .attr('text-anchor', 'middle');
@@ -89,11 +97,11 @@ d3.select('#graph-update-button').on('click', function() {
   x_scale.domain(dataset);
   y_scale.domain([0, number_of_items(dataset, most_frequent_item(dataset))]);
 
-  var bars = svg.selectAll('rect').data([...new Set(dataset)]);
+  var bars = svg.selectAll('rect').data(unique_with_keys(dataset), (d) => d.key);
 
   bars.enter()
     .append('rect')
-    .attr('x', (d) => x_scale(d))
+    .attr('x', (d) => x_scale(d.value))
     .attr('y', chart_height)
     .attr('height', 0)
     .attr('width', x_scale.bandwidth())
@@ -101,23 +109,23 @@ d3.select('#graph-update-button').on('click', function() {
     .merge(bars)
     .transition()
     .duration(1000)
-    .attr('x', (d) => x_scale(d))
-    .attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d)))
+    .attr('x', (d) => x_scale(d.value))
+    .attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)))
     .attr('width', x_scale.bandwidth())
-    .attr('height', (d) => y_scale(number_of_items(dataset, d)));
+    .attr('height', (d) => y_scale(number_of_items(dataset, d.value)));
 
-  var labels = svg.selectAll('text').data([...new Set(dataset)])
+  var labels = svg.selectAll('text').data(unique_with_keys(dataset), (d) => d.key)
 
   labels.enter()
 		.append('text')
-    .text((d) => d)
-    .attr('x', (d) => x_scale(d) + x_scale.bandwidth() / 2)
+    .text((d) => d.value)
+    .attr('x', (d) => x_scale(d.value) + x_scale.bandwidth() / 2)
     .attr('y', chart_height)
     .attr('fill', 'white')
     .attr('text-anchor', 'middle')
     .merge(labels)
     .transition()
     .duration(1000)
-    .attr('x', (d) => x_scale(d) + x_scale.bandwidth() / 2)
-		.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d)) + 20);
+    .attr('x', (d) => x_scale(d.value) + x_scale.bandwidth() / 2)
+		.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)) + 20);
 });
