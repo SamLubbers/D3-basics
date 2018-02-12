@@ -2,9 +2,15 @@ extends ../layout
 
 block content
 	div#chart
-	form
-		input#new-category(type='text' required)
-	button#graph-update-button Add
+	div.block
+		div.inline
+			form
+				input.cool-form#add-category(type='text')
+			button.cool-button#graph-add Add
+		div.inline
+			form
+				input.cool-form#remove-category(type='text')
+			button.cool-button#graph-delete Delete
 
 block js
 	script(src='../js/bargraph-categorical.js')

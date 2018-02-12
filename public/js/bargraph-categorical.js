@@ -90,9 +90,9 @@ svg.selectAll('text')
   .attr('fill', 'white')
   .attr('text-anchor', 'middle');
 
-d3.select('#graph-update-button').on('click', function() {
-  new_category = d3.select('#new-category').property('value');
-  dataset.push(new_category);
+d3.select('#graph-add').on('click', function() {
+  category = d3.select('#add-category').property('value');
+  dataset.push(category);
 
   x_scale.domain(dataset);
   y_scale.domain([0, number_of_items(dataset, most_frequent_item(dataset))]);
@@ -128,4 +128,41 @@ d3.select('#graph-update-button').on('click', function() {
     .duration(1000)
     .attr('x', (d) => x_scale(d.value) + x_scale.bandwidth() / 2)
 		.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)) + 20);
+});
+
+d3.select('#graph-delete').on('click', function(){
+
+	category = d3.select('#remove-category').property('value');
+	index = dataset.indexOf(category);
+	if(index !== -1){
+		dataset.splice(index, 1);
+		x_scale.domain(dataset);
+		y_scale.domain([0, number_of_items(dataset, most_frequent_item(dataset))]);
+
+		var bars = svg.selectAll('rect').data(unique_with_keys(dataset), (d) => d.key);
+
+		bars.transition()
+			.duration(1000)
+			.attr('x', (d) => x_scale(d.value))
+			.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)))
+			.attr('width', x_scale.bandwidth())
+			.attr('height', (d) => y_scale(number_of_items(dataset, d.value)));
+
+		bars.exit()
+			.transition()
+			.attr('y', chart_height)
+			.remove();
+
+		var labels = svg.selectAll('text').data(unique_with_keys(dataset), (d) => d.key)
+
+		labels.transition()
+			.duration(1000)
+			.attr('x', (d) => x_scale(d.value) + x_scale.bandwidth() / 2)
+			.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)) + 20);
+
+		labels.exit()
+			.transition()
+			.attr('y', chart_height)
+			.remove();
+	}
 });

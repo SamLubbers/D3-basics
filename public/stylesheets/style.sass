@@ -35,7 +35,7 @@ body
   -moz-box-shadow: 0 0 $radius 0 #CCC
   -webkit-box-shadow: 0 0 $radius 0 #CCC
 
-#graph-update-button
+.cool-button
   border-radius: 20px
   display: block
   margin: 0 auto
@@ -54,7 +54,7 @@ body
   &:active
     opacity: 0.5
 
-#new-category
+.cool-form
 	display: block
 	margin: 1rem auto
 
@@ -68,5 +68,10 @@ body
 	&:focus
 		outline: none
 
-	&:invalid
-		+box-shadow(0px)
+.inline
+	display: inline-block
+	margin: 0 5px
+
+.block
+	display: block
+	text-align: center

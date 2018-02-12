@@ -61,7 +61,7 @@ svg.selectAll('circle')
   .attr('fill', '#4285F4')
 
 // update chart
-d3.select('#graph-update-button').on('click', function(){
+d3.select('#graph-update').on('click', function(){
 	dataset = dataset.map(x => [Math.random() * 700, Math.random() * 300])
 
 	x_scale.domain([0, d3.max(dataset, (d) => d[0])]);

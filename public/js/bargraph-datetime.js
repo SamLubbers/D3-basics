@@ -132,7 +132,7 @@ svg.selectAll('text')
   .attr('text-anchor', 'middle');
 
 // event handler
-d3.select('#graph-update-button').on('click', function() {
+d3.select('#graph-update').on('click', function() {
 
 	dataset.forEach((o) => o.revenue = Math.random() * 9000 + 1000);
 
