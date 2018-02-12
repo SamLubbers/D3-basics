@@ -19,6 +19,8 @@ function unique_with_keys(array){
 	return unique_keyed_dataset;
 }
 
+unique_dataset = unique_with_keys(dataset);
+
 // create svg container
 chart_height = 400;
 chart_width = 800;
@@ -61,7 +63,7 @@ y_scale = d3.scaleLinear()
 
 // bind data and create bars
 svg.selectAll('rect')
-  .data(unique_with_keys(dataset), (d) => d.key)
+  .data(unique_dataset, (d) => d.key)
   .enter()
   .append('rect')
   .attr('x', (d) => x_scale(d.value))
@@ -76,7 +78,7 @@ svg.selectAll('rect')
 
 // create labels
 svg.selectAll('text')
-  .data(unique_with_keys(dataset), (d) => d.key)
+  .data(unique_dataset, (d) => d.key)
   .enter()
   .append('text')
   .text((d) => d.value)
@@ -94,10 +96,14 @@ d3.select('#graph-add').on('click', function() {
   category = d3.select('#add-category').property('value');
   dataset.push(category);
 
-  x_scale.domain(dataset);
+  item_added = unique_dataset.length != unique_with_keys(dataset).length;
+  if(item_added){
+    unique_dataset.push({'key':unique_dataset[unique_dataset.length-1].key+1,'value':category})
+  }
+  x_scale.domain(unique_dataset.map(x => x.value));
   y_scale.domain([0, number_of_items(dataset, most_frequent_item(dataset))]);
 
-  var bars = svg.selectAll('rect').data(unique_with_keys(dataset), (d) => d.key);
+  var bars = svg.selectAll('rect').data(unique_dataset, (d) => d.key);
 
   bars.enter()
     .append('rect')
@@ -114,7 +120,7 @@ d3.select('#graph-add').on('click', function() {
     .attr('width', x_scale.bandwidth())
     .attr('height', (d) => y_scale(number_of_items(dataset, d.value)));
 
-  var labels = svg.selectAll('text').data(unique_with_keys(dataset), (d) => d.key)
+  var labels = svg.selectAll('text').data(unique_dataset, (d) => d.key)
 
   labels.enter()
 		.append('text')
@@ -134,35 +140,46 @@ d3.select('#graph-delete').on('click', function(){
 
 	category = d3.select('#remove-category').property('value');
 	index = dataset.indexOf(category);
-	if(index !== -1){
+
+  if(index !== -1){
 		dataset.splice(index, 1);
-		x_scale.domain(dataset);
+    // remove the item from the original unique_dataset so the index of each item is maintained
+    item_removed = unique_with_keys(dataset).length != unique_dataset.length;
+    if(item_removed){
+      for (var i = 0; i < unique_dataset.length; i++) {
+        if(unique_dataset[i].value === category){
+          unique_dataset.splice(i, 1);
+        }
+      }
+    }
+
+    x_scale.domain(unique_dataset.map(x => x.value));
 		y_scale.domain([0, number_of_items(dataset, most_frequent_item(dataset))]);
 
-		var bars = svg.selectAll('rect').data(unique_with_keys(dataset), (d) => d.key);
+    var bars = svg.selectAll('rect').data(unique_dataset, (d) => d.key);
 
-		bars.transition()
-			.duration(1000)
-			.attr('x', (d) => x_scale(d.value))
-			.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)))
-			.attr('width', x_scale.bandwidth())
-			.attr('height', (d) => y_scale(number_of_items(dataset, d.value)));
+    bars.transition()
+    	.duration(1000)
+    	.attr('x', (d) => x_scale(d.value))
+    	.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)))
+    	.attr('width', x_scale.bandwidth())
+    	.attr('height', (d) => y_scale(number_of_items(dataset, d.value)));
 
-		bars.exit()
-			.transition()
-			.attr('y', chart_height)
-			.remove();
+    bars.exit()
+    	.transition()
+    	.attr('y', chart_height)
+    	.remove();
 
-		var labels = svg.selectAll('text').data(unique_with_keys(dataset), (d) => d.key)
+    var labels = svg.selectAll('text').data(unique_dataset, (d) => d.key);
 
-		labels.transition()
-			.duration(1000)
-			.attr('x', (d) => x_scale(d.value) + x_scale.bandwidth() / 2)
-			.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)) + 20);
+    labels.transition()
+    	.duration(1000)
+    	.attr('x', (d) => x_scale(d.value) + x_scale.bandwidth() / 2)
+    	.attr('y', (d) => chart_height - y_scale(number_of_items(dataset, d.value)) + 20);
 
-		labels.exit()
-			.transition()
-			.attr('y', chart_height)
-			.remove();
+    labels.exit()
+    	.transition()
+    	.attr('y', chart_height)
+    	.remove();
 	}
 });
