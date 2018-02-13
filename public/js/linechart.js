@@ -27,7 +27,7 @@ x_scale = d3.scaleTime()
   .range([padding, chart_width - padding]);
 
 y_scale = d3.scaleLinear()
-  .domain([0, d3.max(dataset.map(x => x.value))])
+  .domain([d3.min(dataset.map(x => x.value)) - 100, d3.max(dataset.map(x => x.value))])
   .range([chart_height - padding, padding]);
 
 // svg
@@ -55,3 +55,15 @@ svg.append('g')
   .attr('class', 'axis')
   .attr('id', 'y_axis')
   .attr('transform', 'translate(' + padding + ',0)');
+
+// line
+var line = d3.line()
+  .x((d) => x_scale(d.date))
+  .y((d) => y_scale(d.value))
+
+svg.append('path')
+  .datum(dataset)
+  .attr('fill', 'none')
+  .attr('stroke', '#4285F4')
+  .attr('stroke-width', '2')
+  .attr('d', line)
