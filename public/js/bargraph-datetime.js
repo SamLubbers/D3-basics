@@ -91,15 +91,28 @@ svg.selectAll('rect')
     return revenue_scale(d.revenue)
   })
   .attr('fill', '#4285F4')
-  .on('mouseover', function() {
+  .on('mouseover', function(d) {
     d3.select(this)
-      .transition()
+      .transition('hover')
       .attr('fill', '#7BACF4');
+
+    // show tooltip
+    let x = time_scale(d.date)
+    let y = chart_height - revenue_scale(d.revenue) - 40
+
+    d3.select('#tooltip')
+      .style('left', x + 'px')
+      .style('top', y + 'px')
+      .style('display', 'block')
+      .text(d.revenue + '£');
   })
   .on('mouseout', function() {
     d3.select(this)
       .transition()
       .attr('fill', '#4285F4');
+
+    d3.select('#tooltip')
+      .style('display', 'none');
   });
 
 // create labels
@@ -133,11 +146,11 @@ svg.selectAll('text')
 // event handler
 d3.select('#graph-update').on('click', function() {
 
-  dataset.forEach((o) => o.revenue = Math.random() * 9000 + 1000);
+  dataset.forEach((o) => o.revenue = Math.round(Math.random() * 9000 + 1000));
 
   svg.selectAll('rect')
     .data(dataset)
-    .transition()
+    .transition('update')
     .duration(1000)
     .ease(d3.easeCubicInOut)
     .attr('y', function(d) {

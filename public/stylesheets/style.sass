@@ -13,6 +13,7 @@ body
   height: 400px
   // background-color: #FAFAFA
   margin: 25px auto
+  position: relative
 
 .bar
   display: inline-block
@@ -75,3 +76,30 @@ body
 .block
 	display: block
 	text-align: center
+
+#tooltip
+  position: absolute
+
+  background-color: black
+  opacity: 0.8
+  color: white
+  font-size: 12px
+  text-align: center
+
+  width: 50px
+  padding: 10px
+  border-radius: 10px
+  border: 1px solid black
+
+  pointer-events: none
+  display: none
+
+  &::after
+    content: " "
+    position: absolute
+    top: 100%
+    left: 50%
+    margin-left: -5px
+    border-width: 5px
+    border-style: solid
+    border-color: black transparent transparent transparent
