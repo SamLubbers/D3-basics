@@ -13,5 +13,8 @@ router.get('/bargraph-categorical', (req, res) => {
 router.get('/scatterplot', (req, res) => {
   res.render('charts/scatterplot');
 })
+router.get('/linechart', (req, res) => {
+  res.render('charts/linechart');
+})
 
 module.exports = router;
