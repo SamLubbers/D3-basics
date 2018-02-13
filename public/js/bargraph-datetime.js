@@ -1,52 +1,40 @@
 var dataset = [{
-    "date": "01/01/18",
-    "revenue": 1000
-  },
-  {
-    "date": "01/02/18",
-    "revenue": 2000
-  },
-  {
-    "date": "01/03/18",
-    "revenue": 3000
-  },
-  {
-    "date": "01/04/18",
-    "revenue": 4000
-  },
-  {
-    "date": "01/05/18",
-    "revenue": 5000
-  },
-  {
-    "date": "01/06/18",
-    "revenue": 6000
-  },
-  {
-    "date": "01/07/18",
-    "revenue": 5000
-  },
-  {
-    "date": "01/08/18",
-    "revenue": 4000
-  },
-  {
-    "date": "01/09/18",
-    "revenue": 3000
-  },
-  {
-    "date": "01/10/18",
-    "revenue": 3000
-  },
-  {
-    "date": "01/11/18",
-    "revenue": 8000
-  },
-  {
-    "date": "01/12/18",
-    "revenue": 10000
-  }
-]
+  "date": "01/01/18",
+  "revenue": 1000
+}, {
+  "date": "01/02/18",
+  "revenue": 2000
+}, {
+  "date": "01/03/18",
+  "revenue": 3000
+}, {
+  "date": "01/04/18",
+  "revenue": 4000
+}, {
+  "date": "01/05/18",
+  "revenue": 5000
+}, {
+  "date": "01/06/18",
+  "revenue": 6000
+}, {
+  "date": "01/07/18",
+  "revenue": 5000
+}, {
+  "date": "01/08/18",
+  "revenue": 4000
+}, {
+  "date": "01/09/18",
+  "revenue": 3000
+}, {
+  "date": "01/10/18",
+  "revenue": 3000
+}, {
+  "date": "01/11/18",
+  "revenue": 8000
+}, {
+  "date": "01/12/18",
+  "revenue": 10000
+}]
 
 
 // create svg container
@@ -102,7 +90,17 @@ svg.selectAll('rect')
   .attr('height', function(d) {
     return revenue_scale(d.revenue)
   })
-  .attr('fill', '#4285F4');
+  .attr('fill', '#4285F4')
+  .on('mouseover', function() {
+    d3.select(this)
+      .transition()
+      .attr('fill', '#7BACF4');
+  })
+  .on('mouseout', function() {
+    d3.select(this)
+      .transition()
+      .attr('fill', '#4285F4');
+  });
 
 // create labels
 svg.selectAll('text')
@@ -114,7 +112,7 @@ svg.selectAll('text')
   })
   .attr('x', function(d, i) {
     bar_position = time_scale(d.date)
-    // center text in the chart
+      // center text in the chart
     if (i + 1 != dataset.length) {
       // right limit is the initial position of the next bar
       var right_limit = time_scale(dataset[i + 1].date);
@@ -129,18 +127,19 @@ svg.selectAll('text')
     return chart_height - revenue_scale(d.revenue) + 18;
   })
   .attr('fill', 'white')
-  .attr('text-anchor', 'middle');
+  .attr('text-anchor', 'middle')
+  .style('pointer-events', 'none');
 
 // event handler
 d3.select('#graph-update').on('click', function() {
 
-	dataset.forEach((o) => o.revenue = Math.random() * 9000 + 1000);
+  dataset.forEach((o) => o.revenue = Math.random() * 9000 + 1000);
 
   svg.selectAll('rect')
     .data(dataset)
     .transition()
     .duration(1000)
-		.ease(d3.easeCubicInOut)
+    .ease(d3.easeCubicInOut)
     .attr('y', function(d) {
       return chart_height - revenue_scale(d.revenue);
     })
@@ -153,7 +152,7 @@ d3.select('#graph-update').on('click', function() {
     .data(dataset)
     .transition()
     .duration(1000)
-		.ease(d3.easeCubicInOut)
+    .ease(d3.easeCubicInOut)
     .text(function(d) {
       return formatTime(d.date);
     })
