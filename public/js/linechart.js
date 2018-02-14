@@ -24,7 +24,7 @@ x_scale = d3.scaleTime()
   .domain([d3.min(dataset.map(x => x.date)),
     d3.max(dataset.map(x => x.date))
   ])
-  .range([padding, chart_width - padding]);
+  .range([padding + 1, chart_width - padding]);
 
 y_scale = d3.scaleLinear()
   .domain([d3.min(dataset.map(x => x.value)) - 100, d3.max(dataset.map(x => x.value))])
@@ -59,7 +59,13 @@ svg.append('g')
 // line
 var line = d3.line()
   .x((d) => x_scale(d.date))
-  .y((d) => y_scale(d.value))
+  .y((d) => y_scale(d.value));
+
+
+var area = d3.area()
+  .x((d) => x_scale(d.date))
+  .y0(y_scale.range()[0])
+  .y1((d) => y_scale(d.value));
 
 svg.append('path')
   .datum(dataset)
@@ -67,3 +73,8 @@ svg.append('path')
   .attr('stroke', '#4285F4')
   .attr('stroke-width', '2')
   .attr('d', line)
+
+svg.append('path')
+  .datum(dataset)
+  .attr('d', area)
+  .attr('fill', '#CBEFFF')
