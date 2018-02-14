@@ -16,5 +16,8 @@ router.get('/scatterplot', (req, res) => {
 router.get('/linechart', (req, res) => {
   res.render('charts/linechart');
 })
+router.get('/piechart', (req, res) => {
+  res.render('charts/piechart');
+})
 
 module.exports = router;
