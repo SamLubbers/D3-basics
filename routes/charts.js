@@ -20,4 +20,7 @@ router.get('/piechart', (req, res) => {
   res.render('charts/piechart');
 })
 
+router.get('/donutchart', (req, res) => {
+  res.render('charts/donutchart');
+})
 module.exports = router;
