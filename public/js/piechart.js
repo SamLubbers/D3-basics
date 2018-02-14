@@ -72,4 +72,5 @@ coordinates.append('text')
   .text((d) => d.value)
   .attr('id', (d, i) => 'text_' + i)
   .attr('fill', 'none')
-  .style('font-size', '18px');
+  .style('font-size', '18px')
+  .style('pointer-events', 'none');
