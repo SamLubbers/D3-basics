@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/datadisplay', (req, res) => {
-	res.render('fundamentals/datadisplay');
+router.get('/network', (req, res) => {
+	res.render('force/network');
 });
 
 module.exports = router;

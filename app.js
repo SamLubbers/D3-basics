@@ -6,6 +6,7 @@ var index = require('./routes/index');
 var svg = require('./routes/svg');
 var fundamentals = require('./routes/fundamentals');
 var charts = require('./routes/charts');
+var force = require('./routes/force');
 
 var app = express();
 
@@ -13,10 +14,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(sassMiddleware({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: true,
-  sourceMap: true
+	src: path.join(__dirname, 'public'),
+	dest: path.join(__dirname, 'public'),
+	indentedSyntax: true,
+	sourceMap: true
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,8 +26,10 @@ app.use('/', index);
 app.use('/svg', svg);
 app.use('/fundamentals', fundamentals);
 app.use('/charts', charts);
+app.use('/force', force);
 
 
-app.listen('3000', ()=> console.log('Application listening on http://localhost:3000/'));
+app.listen('3000', () => console.log(
+	'Application listening on http://localhost:3000/'));
 
 module.exports = app;
