@@ -23,4 +23,8 @@ router.get('/piechart', (req, res) => {
 router.get('/donutchart', (req, res) => {
   res.render('charts/donutchart');
 })
+
+router.get('/stackedbars', (req, res) => {
+	res.render('charts/stackedbars');
+})
 module.exports = router;
