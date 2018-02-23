@@ -7,16 +7,27 @@ var svg = d3.select('#chart-O')
   .attr('width', chart_width)
   .attr('height', chart_height);
 
+// force layout
+var simulation = d3.forceSimulation()
+  .force('charge', d3.forceManyBody().strength(-200))
+  .force('center',
+    d3.forceCenter()
+    .x(chart_width / 2)
+    .y(chart_height / 2));
 
 d3.json('../data/countries.json', function(error, dataset) {
   if (error) throw error;
 
   // load dataset with nodes and create links
-  num_nodes = 10;
+  num_nodes = 20;
   nodes_data = dataset.splice(0, num_nodes);
 
-  links_data = create_circular_links(nodes_data);
-  links_data = links_data.concat(create_pair_links(nodes_data));
+  links_data = create_network_links(nodes_data);
+
+  simulation.nodes(nodes_data)
+    .on('tick', ticked);
+
+  simulation.force('links', d3.forceLink(links_data).id((d) => d.name));
 
   // create nodes and links
   var links = svg.selectAll('line')
@@ -31,18 +42,13 @@ d3.json('../data/countries.json', function(error, dataset) {
     .enter()
     .append('circle')
     .attr('r', 5)
-    .style('fill', '#4285F4');
+    .style('fill', '#4285F4')
+    .call(d3.drag()
+      .on('start', dragStarted)
+      .on('drag', dragging)
+      .on('end', dragEnded));
 
-  // force layout
-  var force = d3.forceSimulation(nodes_data)
-    .force('charge', d3.forceManyBody().strength(-200))
-    .force('links', d3.forceLink(links_data).id((d) => d.name))
-    .force('center',
-      d3.forceCenter()
-      .x(chart_width / 2)
-      .y(chart_height / 2));
-
-  force.on('tick', function() {
+  function ticked() {
     nodes.attr('cx', (d) => d.x)
       .attr('cy', (d) => d.y)
 
@@ -50,9 +56,17 @@ d3.json('../data/countries.json', function(error, dataset) {
       .attr('y1', (d) => d.source.y)
       .attr('x2', (d) => d.target.x)
       .attr('y2', (d) => d.target.y)
-  })
+  }
+
 });
 
+function create_network_links(nodes) {
+  circular_links = create_circular_links(nodes);
+  pair_links = create_pair_links(nodes);
+  network_links = circular_links.concat(pair_links);
+  return network_links;
+}
+// dynamically create links
 function create_circular_links(nodes) {
   links = [];
 
@@ -86,4 +100,25 @@ function create_pair_links(nodes) {
     links.push(link);
   }
   return links;
+}
+
+function dragStarted(d) {
+  if (!d3.event.active) {
+    simulation.alphaTarget(0.3).restart();
+  }
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragging(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragEnded(d) {
+  if (!d3.event.active) {
+    simulation.alphaTarget(0);
+  }
+  d.fx = null;
+  d.fy = null;
 }
