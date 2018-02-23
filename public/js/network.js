@@ -12,10 +12,11 @@ d3.json('../data/countries.json', function(error, dataset) {
   if (error) throw error;
 
   // load dataset with nodes and create links
-  num_nodes = 30;
+  num_nodes = 10;
   nodes_data = dataset.splice(0, num_nodes);
 
-  links_data = create_pairs(nodes_data);
+  links_data = create_circular_links(nodes_data);
+  links_data = links_data.concat(create_pair_links(nodes_data));
 
   // create nodes and links
   var links = svg.selectAll('line')
@@ -30,11 +31,11 @@ d3.json('../data/countries.json', function(error, dataset) {
     .enter()
     .append('circle')
     .attr('r', 5)
-    .style('fill', 'black');
+    .style('fill', '#4285F4');
 
   // force layout
   var force = d3.forceSimulation(nodes_data)
-    .force('charge', d3.forceManyBody().strength(-20))
+    .force('charge', d3.forceManyBody().strength(-200))
     .force('links', d3.forceLink(links_data).id((d) => d.name))
     .force('center',
       d3.forceCenter()
@@ -52,7 +53,26 @@ d3.json('../data/countries.json', function(error, dataset) {
   })
 });
 
-function create_pairs(nodes) {
+function create_circular_links(nodes) {
+  links = [];
+
+  for (var i = 0; i < nodes.length; i++) {
+    source = nodes[i];
+    if (i == nodes.length - 1) {
+      target = nodes[0]
+    } else {
+      target = nodes[i + 1]
+    }
+    link = {
+      "source": source,
+      "target": target
+    }
+    links.push(link)
+  }
+  return links;
+}
+
+function create_pair_links(nodes) {
   links = [];
 
   nodes_copy = nodes.slice();
