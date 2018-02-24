@@ -7,6 +7,7 @@ var svg = require('./routes/svg');
 var fundamentals = require('./routes/fundamentals');
 var charts = require('./routes/charts');
 var force = require('./routes/force');
+var maps = require('./routes/maps');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/svg', svg);
 app.use('/fundamentals', fundamentals);
 app.use('/charts', charts);
 app.use('/force', force);
+app.use('/maps', maps);
 
 
 app.listen('3000', () => console.log(
