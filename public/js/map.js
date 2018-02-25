@@ -1,14 +1,16 @@
 chart_width = 1000;
-chart_height = 1000;
+chart_height = 600;
 
 map_colors = d3.scaleQuantize()
 	.domain([0, 1])
-	.range(['#f7fbff', '#deebf7', '#c6dbef', '#9ecae1',
-		'#6baed6', '#4292c6', '#2171b5', '#084594'
-	]);
+	.range(d3.schemeBlues[8]);
 
-// geoPath
-geo_path = d3.geoPath(d3.geoAlbersUsa());
+// geoPath with projection
+projection = d3.geoAlbersUsa()
+	.scale([chart_width])
+	.translate([chart_width / 2, chart_height / 2]);
+
+geo_path = d3.geoPath(projection);
 
 svg = d3.select('#chart-L')
 	.append('svg')
