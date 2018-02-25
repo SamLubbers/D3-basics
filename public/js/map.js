@@ -2,7 +2,6 @@ chart_width = 1000;
 chart_height = 600;
 
 map_colors = d3.scaleQuantize()
-	.domain([0, 1])
 	.range(d3.schemeBlues[8]);
 
 // geoPath with projection
@@ -19,8 +18,8 @@ svg = d3.select('#chart-L')
 
 d3.json('../data/us-geo/us-flu.json', function(us_flu_dataset) {
 	map_colors.domain([
-		d3.min(us_flu_dataset, (d) => d.num),
-		d3.max(us_flu_dataset, (d) => d.num)
+		d3.min(us_flu_dataset, (d) => parseFloat(d.num)),
+		d3.max(us_flu_dataset, (d) => parseFloat(d.num))
 	]);
 
 	d3.json('../data/us-geo/us.json', function(us_dataset) {
