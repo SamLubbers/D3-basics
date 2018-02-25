@@ -50,7 +50,53 @@ d3.json('../data/us-geo/us-flu.json', function(us_flu_dataset) {
 					return '#DFDFDF';
 				}
 			})
-			.attr('stroke-width', 1);
+			.attr('stroke-width', 1)
+
+		draw_cities();
 	});
 
 });
+
+function draw_cities() {
+	d3.json('../data/us-geo/us-cities.json', function(us_cities_dataset) {
+
+		population_scale = d3.scaleSqrt()
+			.domain([
+				d3.min(us_cities_dataset, (d) => parseInt(d.population)),
+				d3.max(us_cities_dataset, (d) => parseInt(d.population))
+			])
+			.rangeRound([10, 20]);
+
+		// map coordinates to projections on svg
+		us_cities_dataset.forEach(function(e, i) {
+			var [x, y] = projection([e.lon, e.lat]);
+			us_cities_dataset[i].x = x;
+			us_cities_dataset[i].y = y;
+		});
+
+		svg.selectAll('circle')
+			.data(us_cities_dataset)
+			.enter()
+			.append('circle')
+			.attr('cx', (d) => d.x)
+			.attr('cy', (d) => d.y)
+			.attr('r', (d) => population_scale(d.population))
+			.attr('fill', '#4CFFF4')
+			.attr('opacity', '0.8')
+			.on('mouseover', function(d) {
+				self = d3.select(this);
+				var [x, y] = projection([d.lon, d.lat]);
+				x = x - 25 - self.attr('r') / 2 - d.city.length;
+				y = y - 40;
+				d3.select('#tooltip')
+					.style('left', x + 'px')
+					.style('top', y + 'px')
+					.style('display', 'block')
+					.text(d.city);
+			})
+			.on('mouseout', function() {
+				d3.select('#tooltip')
+					.style('display', 'none')
+			});
+	});
+}
