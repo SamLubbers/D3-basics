@@ -83,20 +83,18 @@ function draw_cities() {
 			.attr('r', (d) => population_scale(d.population))
 			.attr('fill', '#4CFFF4')
 			.attr('opacity', '0.8')
-			.on('mouseover', function(d) {
-				self = d3.select(this);
-				var [x, y] = projection([d.lon, d.lat]);
-				x = x - 25 - self.attr('r') / 2 - d.city.length;
-				y = y - 40;
-				d3.select('#tooltip')
-					.style('left', x + 'px')
-					.style('top', y + 'px')
-					.style('display', 'block')
-					.text(d.city);
-			})
-			.on('mouseout', function() {
-				d3.select('#tooltip')
-					.style('display', 'none')
-			});
 	});
 }
+
+const zoom = d3.zoom()
+	.scaleExtent([1, 10])
+	.translateExtent([
+		[-chart_width / 1.5, -chart_height / 1.5],
+		[chart_width * 1.5, chart_height * 1.5]
+	])
+	.on('zoom', () => {
+		d3.selectAll('path').attr('transform', d3.event.transform);
+		d3.selectAll('circle').attr('transform', d3.event.transform);
+	});
+
+svg.call(zoom);
